@@ -1,0 +1,35 @@
+version: '3'
+services:
+  #Mysql service
+  mysql:
+    image: 'mysql:5.7'
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_PASSWORD=root
+      - MYSQL_DATABASE=souscription
+    ports:
+      - "3308:3306"
+  #Back-end Spring Boot Application
+  microservice-souscription:
+    image: microservice-souscription
+    ports:
+      - "8500:8500"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/souscription?autoReconnect=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "root"
+    build:
+      context: "./"
+      dockerfile: "Dockerfile"
+    depends_on:
+      - mysql
+#Front-end Angular Application
+  frontend:
+      build: ../cimrpoc-web/
+      links:
+             - "microservice-souscription"
+      depends_on:
+             - "microservice-souscription"
+      ports:
+             - "8082:80"  
+  

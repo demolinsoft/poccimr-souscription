@@ -1,0 +1,48 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: microservice-souscription
+  labels:
+    name: microservice-souscription
+spec:
+  ports:
+    - nodePort: 30163
+      port: 8500
+      targetPort: 8500
+      protocol: TCP
+  selector:
+    app: microservice-souscription
+  type: NodePort
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microservice-souscription
+spec:
+  selector:
+    matchLabels:
+      app: microservice-souscription
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: microservice-souscription
+    spec:
+      containers:
+        - name: microservice-souscription
+          image: microservice-souscription:2.0
+          ports:
+            - containerPort: 8500
+          env:   # Setting Enviornmental Variables
+            - name: DB_HOST   # Setting Database host address from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: db-config  # name of configMap
+                  key: host
+            - name: DB_NAME  # Setting Database name from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: db-config
+                  key: name
+            
