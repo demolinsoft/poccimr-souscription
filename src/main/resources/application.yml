@@ -7,9 +7,9 @@ server:
 spring:
     datasource:
         driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://mysql:3306/souscription?autoReconnect=true&useSSL=false
+        url: jdbc:mysql://mysql:3306/souscription?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
         username: root
-        password: root
+        password: admin
         hikari:
             initialization-fail-timeout: 0        
     jpa:
